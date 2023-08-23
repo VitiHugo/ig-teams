@@ -10,7 +10,4 @@ export const Container = styled.View`
 
 export const LoadIndicator = styled.ActivityIndicator.attrs(props => ({
   color: props.theme.COLORS.GRAY_700
-}))`
-
-    
-`;
+}))``;
