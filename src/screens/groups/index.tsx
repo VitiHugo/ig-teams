@@ -3,12 +3,33 @@ import { Container } from './styles';
 import { Header } from '../../components/Header';
 import { Highlight } from '../../components/Highlight';
 import { GroupCard } from '../../components/GroupCard';
-import { useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { ListEmpty } from '../../components/ListEmpty';
 import { Button } from '../../components/Button';
+import { useNavigation, useFocusEffect } from '@react-navigation/native';
+import { groupsGetAll } from '../../storage/group/groupsGetAll';
+
 
 export function Groups() {
-  const [groups, setGroups] = useState(['Galera do DND', 'Galera do fut']);
+  const [groups, setGroups] = useState<string[]>([]);
+  const navigation = useNavigation();  
+
+  function handleNewGroup() {
+    navigation.navigate('new');
+  }
+
+  async function fetchGroups() {
+    try {
+      const data = await groupsGetAll();
+      setGroups(data);
+    } catch (err) {
+      console.log('erro:', err);
+    }
+  }
+
+  useFocusEffect(useCallback(() => {
+    fetchGroups();
+  }, []))
 
   return (
     <Container>
@@ -34,6 +55,7 @@ export function Groups() {
 
       <Button 
         title="Criar nova turma"
+        onPress={handleNewGroup}
       />
     </Container>
   );
